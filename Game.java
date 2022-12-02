@@ -41,7 +41,7 @@ public class Game implements ActionListener, KeyListener{
     Game(){
 
         JFrame frame = new JFrame("Greed for Speed");
-        timer = new Timer(10, this);
+        timer = new Timer(30, this);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(WIDTH, HEIGHT);
@@ -88,7 +88,7 @@ public class Game implements ActionListener, KeyListener{
 
 
     public void addRock(){
-        Rock rock = new Rock(50 + rand.nextInt(500), 0,30+rand.nextInt(30));
+        Rock rock = new Rock(50 + rand.nextInt(500), 0,50+rand.nextInt(30));
         rocks.add(rock);
     }
 
@@ -110,7 +110,7 @@ public class Game implements ActionListener, KeyListener{
                 }
             }
 
-           if(ticks%100==0 && ticks > 0 && rocks.size() < 5){                
+           if(ticks%100==0 && ticks > 0 && rocks.size() < 7){                
                 this.addRock(); 
            }
 
@@ -130,7 +130,7 @@ public class Game implements ActionListener, KeyListener{
 
     public void repaint(Graphics g){    
 
-        drawimg(g);
+        //drawingRoad(g);
 
         Graphics2D g2d = (Graphics2D) g;
 
@@ -145,8 +145,9 @@ public class Game implements ActionListener, KeyListener{
 
         if(rocks.size()>0){
             for( Rock rock: rocks){
-                rock.rock = new Ellipse2D.Double((double)rock.x,(double)rock.y,(double)rock.radius+15, (double)rock.radius);
-                g2d.setColor(Color.gray);
+                rock.rock = new Ellipse2D.Double((double)rock.x,(double)rock.y,(double)rock.radius+15, (double)rock.radius-15);
+                //g2d.setPaint(drawingRock());
+                g2d.setColor(Color.darkGray);
                 g2d.fill(rock.rock);
             }
         }
@@ -157,27 +158,26 @@ public class Game implements ActionListener, KeyListener{
 
     }
 
-    public void drawimg(Graphics g){
-        BufferedImage img = null;
+
+    public TexturePaint drawingRock(){
+        BufferedImage img2 = null;
+        TexturePaint pt = null;
 
         try{
-            img = ImageIO.read(new File("GreedforSpeed/rock.jpg"));}
+            img2 = ImageIO.read(new File("GreedforSpeed/rock.jpg"));}
         catch(IOException e){
             System.out.println("no img!");
         }
 
         
-        if(img != null){
-            Graphics2D g2d = (Graphics2D) g;
-            TexturePaint pt = new TexturePaint(img,new Rectangle(0,0,10,10));
-            g2d.setPaint(pt);
-            g2d.fillRect(0, 0, WIDTH, HEIGHT);
+        if(img2 != null){
+            pt = new TexturePaint(img2,new Rectangle(0,0,200,200));
+            return pt;
         }
+        return pt;
     }
 
-    static class panel extends JPanel {
-
-        
+    static class panel extends JPanel {        
 
         private static final long serialVersionUID = 1L;
     
@@ -193,7 +193,13 @@ public class Game implements ActionListener, KeyListener{
     public void keyPressed(KeyEvent e) {
         if(e.getKeyChar()== KeyEvent.VK_SPACE){
             timer.start();
-            startGame = true;
+            if(startGame == false){
+                startGame = true;
+            }
+            else{ 
+                startGame = false;
+               // gameOver()
+            }
         }
 
         int keyCode = e.getKeyCode();
