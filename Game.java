@@ -1,5 +1,7 @@
 package GreedforSpeed;
 import java.awt.geom.Ellipse2D;
+import java.io.File;
+import java.io.IOException;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
@@ -10,6 +12,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 import java.awt.event.*;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.awt.TexturePaint;
 
 public class Game implements ActionListener, KeyListener{
 
@@ -35,7 +41,7 @@ public class Game implements ActionListener, KeyListener{
     Game(){
 
         JFrame frame = new JFrame("Greed for Speed");
-        timer = new Timer(30, this);
+        timer = new Timer(10, this);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(WIDTH, HEIGHT);
@@ -124,9 +130,7 @@ public class Game implements ActionListener, KeyListener{
 
     public void repaint(Graphics g){    
 
-
-        g.setColor(Color.black);
-        g.fillRect(0, 0, WIDTH, HEIGHT);
+        drawimg(g);
 
         Graphics2D g2d = (Graphics2D) g;
 
@@ -153,13 +157,33 @@ public class Game implements ActionListener, KeyListener{
 
     }
 
+    public void drawimg(Graphics g){
+        BufferedImage img = null;
+
+        try{
+            img = ImageIO.read(new File("GreedforSpeed/rock.jpg"));}
+        catch(IOException e){
+            System.out.println("no img!");
+        }
+
+        
+        if(img != null){
+            Graphics2D g2d = (Graphics2D) g;
+            TexturePaint pt = new TexturePaint(img,new Rectangle(0,0,10,10));
+            g2d.setPaint(pt);
+            g2d.fillRect(0, 0, WIDTH, HEIGHT);
+        }
+    }
+
     static class panel extends JPanel {
+
+        
 
         private static final long serialVersionUID = 1L;
     
         protected void paintComponent(Graphics g){
             super.paintComponent(g);
-            game.repaint(g);                
+            game.repaint(g);              
         } 
 
     }
