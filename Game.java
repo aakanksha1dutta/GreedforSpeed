@@ -6,12 +6,17 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.Timer;
 import java.awt.Graphics2D;
+import java.awt.LayoutManager;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 import java.awt.event.*;
+
+import java.awt.BorderLayout;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -30,7 +35,9 @@ public class Game implements ActionListener, KeyListener{
     protected int ticks;
     protected boolean startGame = false;
     protected ArrayList<roadLines> roads = new ArrayList<>();
-    
+    protected static int score = 0;
+    protected static int highScore = 0;
+   
 
 
     public static void main(String[] args){
@@ -45,9 +52,8 @@ public class Game implements ActionListener, KeyListener{
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(WIDTH, HEIGHT);
-
-
         panel = new panel();
+        panel.setLayout(new BorderLayout());
         panel.setBackground(Color.black);
         frame.add(panel);
         frame.addKeyListener(this);
@@ -121,7 +127,19 @@ public class Game implements ActionListener, KeyListener{
                     road.y = -100;
                 }
             }
-       }
+
+            if(ticks%20==0){
+
+                score+= 10;
+            }
+        
+           //carIntersectsRock(); //check if car intersects rock and then sets start game to false if it does
+
+        }
+
+        if(score > highScore){
+            highScore = score;
+        }
 
            
 
@@ -157,40 +175,40 @@ public class Game implements ActionListener, KeyListener{
         car = new Rectangle(xMotion + 275, 450, 50, 70);
         g2d.setColor(Color.RED.darker());
         g2d.fill(car);
+        g2d.setColor(Color.CYAN);
+        g2d.setFont(new Font("TimesRoman", Font.PLAIN, 20)); 
+        g2d.drawString("Score: "+ score, 450, 50);
+        g2d.drawString("High Score: "+ highScore, 50, 50);
 
     }
 
 
-    public TexturePaint drawingRock(){
-        BufferedImage img2 = null;
-        TexturePaint pt = null;
-
-        try{
-            img2 = ImageIO.read(new File("GreedforSpeed/rock.jpg"));}
-        catch(IOException e){
-            System.out.println("no img!");
+   /* protected void carIntersectsRock(){
+        for(Rock rock : rocks){
+            Ellipse2D rockObj = rock.rock;
+            if(rockObj.intersects(car)){
+                startGame = false;
+            }
         }
+    }*/
 
+    static class panel extends JPanel {  
         
-        if(img2 != null){
-            pt = new TexturePaint(img2,new Rectangle(0,0,200,200));
-            return pt;
-        }
-        return pt;
-    }
+        //static JLabel scoreLabel;
+        //static JLabel highScoreLabel;
 
-    
-
-
-    static class panel extends JPanel {        
 
         private static final long serialVersionUID = 1L;
     
         protected void paintComponent(Graphics g){
             super.paintComponent(g);
             game.repaint(g);              
-        } 
+        }
 
+
+
+    
+    
     }
 
    
