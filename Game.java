@@ -45,6 +45,8 @@ public class Game implements ActionListener, KeyListener{
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(WIDTH, HEIGHT);
+
+
         panel = new panel();
         panel.setBackground(Color.black);
         frame.add(panel);
@@ -52,7 +54,6 @@ public class Game implements ActionListener, KeyListener{
         frame.setResizable(false);
         frame.setVisible(true);
 
-        //chnage calculations, keep one stray
         for(int i = -1; i<4;i++){
             roads.add(new roadLines(290, i*200)); //road lines of width 20,length 120, xcoords 290 and ycoords multiples of 180
         }        
@@ -120,8 +121,9 @@ public class Game implements ActionListener, KeyListener{
                     road.y = -100;
                 }
             }
-        }
+       }
 
+           
 
         panel.repaint(); 
         
@@ -176,6 +178,9 @@ public class Game implements ActionListener, KeyListener{
         }
         return pt;
     }
+
+    
+
 
     static class panel extends JPanel {        
 
