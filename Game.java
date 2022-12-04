@@ -1,26 +1,16 @@
 package GreedforSpeed;
 import java.awt.geom.Ellipse2D;
-import java.io.File;
-import java.io.IOException;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.Timer;
 import java.awt.Graphics2D;
-import java.awt.LayoutManager;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 import java.awt.event.*;
-
-import java.awt.BorderLayout;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.awt.TexturePaint;
 
 public class Game implements ActionListener, KeyListener{
 
@@ -53,7 +43,6 @@ public class Game implements ActionListener, KeyListener{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(WIDTH, HEIGHT);
         panel = new panel();
-        panel.setLayout(new BorderLayout());
         panel.setBackground(Color.black);
         frame.add(panel);
         frame.addKeyListener(this);
@@ -129,19 +118,16 @@ public class Game implements ActionListener, KeyListener{
             }
 
             if(ticks%20==0){
-
                 score+= 10;
             }
         
-           //carIntersectsRock(); //check if car intersects rock and then sets start game to false if it does
+           carIntersectsRock();  //check if car intersects rock and then sets start game to false if it does
 
         }
 
         if(score > highScore){
             highScore = score;
-        }
-
-           
+        }           
 
         panel.repaint(); 
         
@@ -150,7 +136,6 @@ public class Game implements ActionListener, KeyListener{
 
     public void repaint(Graphics g){    
 
-        //drawingRoad(g);
 
         Graphics2D g2d = (Graphics2D) g;
 
@@ -166,7 +151,6 @@ public class Game implements ActionListener, KeyListener{
         if(rocks.size()>0){
             for( Rock rock: rocks){
                 rock.rock = new Ellipse2D.Double((double)rock.x,(double)rock.y,(double)rock.radius+15, (double)rock.radius-15);
-                //g2d.setPaint(drawingRock());
                 g2d.setColor(Color.darkGray);
                 g2d.fill(rock.rock);
             }
@@ -180,34 +164,53 @@ public class Game implements ActionListener, KeyListener{
         g2d.drawString("Score: "+ score, 450, 50);
         g2d.drawString("High Score: "+ highScore, 50, 50);
 
+        if(startGame == false && ticks>0){
+            gameOver(g2d);
+        }
+
+        if(ticks == 0 && startGame == false & highScore == 0){
+            g.setFont(new Font("Arial", Font.BOLD, 40));
+            g.setColor(Color.GREEN);
+            g.drawString("Press Space to Start!", 110, 350);
+        }
+
+
     }
 
 
-   /* protected void carIntersectsRock(){
+   protected void carIntersectsRock(){
         for(Rock rock : rocks){
-            Ellipse2D rockObj = rock.rock;
-            if(rockObj.intersects(car)){
-                startGame = false;
+            if(rock.rock != null){
+                if(rock.rock.intersects(car)){
+                    startGame = false;
+                }
             }
         }
-    }*/
+    }
+
+    protected void gameOver(Graphics g){
+        timer.stop();
+        g.setFont(new Font("Arial", Font.BOLD, 50));
+        g.setColor(Color.RED.darker());
+        g.drawString("GAME OVER!", 150, 380);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.setColor(Color.GREEN);
+        g.drawString("Press Space to Start Again!", 180, 420);
+
+        score = 0;
+        ticks = 0;
+        rocks.clear();
+    }
 
     static class panel extends JPanel {  
         
-        //static JLabel scoreLabel;
-        //static JLabel highScoreLabel;
-
-
+        
         private static final long serialVersionUID = 1L;
     
         protected void paintComponent(Graphics g){
             super.paintComponent(g);
             game.repaint(g);              
         }
-
-
-
-    
     
     }
 
@@ -221,16 +224,17 @@ public class Game implements ActionListener, KeyListener{
             }
             else{ 
                 startGame = false;
-               // gameOver()
             }
         }
 
-        int keyCode = e.getKeyCode();
-        if(keyCode == KeyEvent.VK_LEFT){
-            xMotion -= 10;
-        }
-        if(keyCode == KeyEvent.VK_RIGHT){
-            xMotion += 10;
+        if(startGame == true){
+            int keyCode = e.getKeyCode();
+            if(keyCode == KeyEvent.VK_LEFT && (xMotion + 275)>0){
+                xMotion -= 10;
+            }
+            if(keyCode == KeyEvent.VK_RIGHT &&  (xMotion +10 + 275)<WIDTH){
+                xMotion += 10;
+            }
         }
         panel.repaint();
         
