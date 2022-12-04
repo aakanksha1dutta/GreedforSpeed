@@ -229,15 +229,14 @@ public class Game implements ActionListener, KeyListener{
 
         if(startGame == true){
             int keyCode = e.getKeyCode();
-            if(keyCode == KeyEvent.VK_LEFT && (xMotion + 275)>0){
+            if(keyCode == KeyEvent.VK_LEFT && (xMotion + 275)>0){ 
                 xMotion -= 10;
             }
             if(keyCode == KeyEvent.VK_RIGHT &&  (xMotion +10 + 275)<WIDTH){
                 xMotion += 10;
             }
         }
-        panel.repaint();
-        
+        panel.repaint();        
     }
 
 
