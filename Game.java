@@ -1,16 +1,25 @@
 package GreedforSpeed;
 import java.awt.geom.Ellipse2D;
+import java.io.File;
+import java.io.IOException;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.Timer;
 import java.awt.Graphics2D;
+import java.awt.LayoutManager;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 import java.awt.event.*;
+import java.awt.GradientPaint;
+import java.awt.BorderLayout;
 
 public class Game implements ActionListener, KeyListener{
 
@@ -138,6 +147,8 @@ public class Game implements ActionListener, KeyListener{
 
 
         Graphics2D g2d = (Graphics2D) g;
+        try{g2d.drawImage(ImageIO.read(new File("GreedforSpeed/road.jpg")), 0, 0, panel);}
+        catch(IOException e){}
 
         
         for(roadLines road: roads){
@@ -151,13 +162,13 @@ public class Game implements ActionListener, KeyListener{
         if(rocks.size()>0){
             for( Rock rock: rocks){
                 rock.rock = new Ellipse2D.Double((double)rock.x,(double)rock.y,(double)rock.radius+15, (double)rock.radius-15);
-                g2d.setColor(Color.darkGray);
+                g2d.setColor(Color.gray);
                 g2d.fill(rock.rock);
             }
         }
 
         car = new Rectangle(xMotion + 275, 450, 50, 70);
-        g2d.setColor(Color.RED.darker());
+        g2d.setPaint(new GradientPaint(0, 0, Color.BLUE, 500, 0, Color.RED));
         g2d.fill(car);
         g2d.setColor(Color.CYAN);
         g2d.setFont(new Font("TimesRoman", Font.PLAIN, 20)); 
@@ -191,7 +202,7 @@ public class Game implements ActionListener, KeyListener{
     protected void gameOver(Graphics g){
         timer.stop();
         g.setFont(new Font("Arial", Font.BOLD, 50));
-        g.setColor(Color.RED.darker());
+        g.setColor(Color.YELLOW);
         g.drawString("GAME OVER!", 150, 380);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.setColor(Color.GREEN);
@@ -203,13 +214,17 @@ public class Game implements ActionListener, KeyListener{
     }
 
     static class panel extends JPanel {  
-        
+
+        panel(){
+            setLayout(new BorderLayout());
+        }
         
         private static final long serialVersionUID = 1L;
     
         protected void paintComponent(Graphics g){
             super.paintComponent(g);
-            game.repaint(g);              
+            game.repaint(g);           
+
         }
     
     }
