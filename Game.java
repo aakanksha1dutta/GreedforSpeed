@@ -5,14 +5,10 @@ import java.io.IOException;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
-
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.Timer;
 import java.awt.Graphics2D;
-import java.awt.LayoutManager;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -175,7 +171,7 @@ public class Game implements ActionListener, KeyListener{
         g2d.drawString("Score: "+ score, 450, 50);
         g2d.drawString("High Score: "+ highScore, 50, 50);
 
-        if(startGame == false && ticks>0){
+        if(startGame == false && ticks==-1 ){
             gameOver(g2d);
         }
 
@@ -194,6 +190,8 @@ public class Game implements ActionListener, KeyListener{
             if(rock.rock != null){
                 if(rock.rock.intersects(car)){
                     startGame = false;
+                    ticks = -1;
+                    
                 }
             }
         }
@@ -209,7 +207,7 @@ public class Game implements ActionListener, KeyListener{
         g.drawString("Press Space to Start Again!", 180, 420);
 
         score = 0;
-        ticks = 0;
+        ticks = -1;
         rocks.clear();
     }
 
@@ -236,6 +234,7 @@ public class Game implements ActionListener, KeyListener{
             timer.start();
             if(startGame == false){
                 startGame = true;
+                ticks = 0;
             }
             else{ 
                 startGame = false;
@@ -251,6 +250,7 @@ public class Game implements ActionListener, KeyListener{
                 xMotion += 10;
             }
         }
+
         panel.repaint();        
     }
 

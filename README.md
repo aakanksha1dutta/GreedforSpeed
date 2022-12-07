@@ -9,7 +9,7 @@ Spacebar - starts a new run of the game.
 
 
 ##Game Graphics:
-Car - the red square
+Car - the gradient square
 Rocks - the gray ovals
 Road - the black background with white stripes
 
